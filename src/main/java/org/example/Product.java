@@ -17,15 +17,37 @@ public class Product {
 
     }
 
-    public int getId(){return Id;}
-    public String getName(){return Name;}
-    public double getPrice(){return Price;}
-    public int getStock(){return Stock;}
+    public int getId()
+    {
+        return Id;
+    }
 
-  public void reduceStock(int amount){
-        if(amount > Stock){
-            IO.println("Not enough stock");
+    public String getName()
+    {
+        return Name;
+    }
+
+    public double getPrice()
+    {
+        return Price;
+    }
+
+    public int getStock()
+    {
+        return Stock;
+    }
+
+    public boolean reduceStock(int amount) {
+
+        if (amount <= 0) {
+            return false;
         }
+
+        if (amount > Stock) {
+            return false;
+        }
+
         Stock -= amount;
-  }
+        return true;
+    }
 }

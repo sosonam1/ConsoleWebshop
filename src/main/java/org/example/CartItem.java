@@ -9,10 +9,18 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Product getProduct(){return product;}
-    public int getQuantity(){return quantity;}
+    public Product getProduct()
+    {
+        return product;
+    }
 
-    public double getSubtotal(){
+    public int getQuantity()
+    {
+        return quantity;
+    }
+
+    public double getSubtotal()
+    {
         return product.getPrice() * quantity;
     }
 

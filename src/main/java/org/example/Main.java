@@ -65,8 +65,10 @@ public class Main {
                     }
 
                     if (foundProduct != null) {
+                        if(foundProduct.reduceStock(quantity))
                         cart.addProduct(foundProduct, quantity);
                         IO.println("Product added to the shopping cart!");
+                        IO.println("Remaining stock: " + foundProduct.getStock());
                     } else {
                         IO.println("Product not found.");
                     }
