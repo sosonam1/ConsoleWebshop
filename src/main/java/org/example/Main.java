@@ -26,8 +26,9 @@ public class Main {
             IO.println("1. View products");
             IO.println("2. Add product to shopping cart");
             IO.println("3. View shopping cart");
-            IO.println("4. Checkout");
-            IO.println("5. Exit");
+            IO.println("4. Remove product from shopping cart");
+            IO.println("5. Checkout");
+            IO.println("6. Exit");
             IO.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -80,12 +81,20 @@ public class Main {
                     break;
 
                 case 4:
+                    cart.showCart();
+                    IO.println("Enter product ID to remove: ");
+                    int RemoveId = scanner.nextInt();
+                    cart.RemoveCartItem(RemoveId);
+                    break;
+
+
+                case 5:
                     IO.println("Total amount: €" + cart.getTotal());
                     IO.println("Thank you for your order!");
                     running = false;
                     break;
 
-                case 5:
+                case 6:
                     IO.println("Closing the webshop.");
                     running = false;
                     break;

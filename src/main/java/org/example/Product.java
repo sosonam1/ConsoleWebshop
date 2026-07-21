@@ -50,4 +50,11 @@ public class Product {
         Stock -= amount;
         return true;
     }
+
+    public void IncreaseStock(int amount)
+    {
+        Stock += amount;
+    }
+
+
 }
