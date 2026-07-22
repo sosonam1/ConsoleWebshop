@@ -84,7 +84,7 @@ public class Main {
                     cart.showCart();
                     IO.println("Enter product ID to remove: ");
                     int RemoveId = scanner.nextInt();
-                    cart.RemoveCartItem(RemoveId);
+                    cart.removeCartItem(RemoveId);
                     break;
 
 

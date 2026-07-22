@@ -34,17 +34,18 @@ public class ShoppingCart {
         return total;
     }
 
-    public void RemoveCartItem(int ProductId )
+    public void removeCartItem(int ProductId )
     {
         for(int i = 0; i < items.size(); i++)
         {
             CartItem item = items.get(i);
 
             if(item.getProduct().getId() == ProductId){
-                item.getProduct().IncreaseStock(item.getQuantity());
+                item.getProduct().increaseStock(item.getQuantity());
                 items.remove(i);
 
                 IO.println("Product removed from the shopping cart.");
+                return;
             }
 
         }

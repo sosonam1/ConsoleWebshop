@@ -51,7 +51,7 @@ public class Product {
         return true;
     }
 
-    public void IncreaseStock(int amount)
+    public void increaseStock(int amount)
     {
         Stock += amount;
     }
