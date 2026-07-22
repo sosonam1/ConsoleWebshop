@@ -2,39 +2,39 @@ package org.example;
 
 public class Product {
 
-    private int Id;
-    private String Name;
-    private double Price;
-    private int Stock;
+    private int id;
+    private String name;
+    private double price;
+    private int stock;
 
     public Product(int id, String name, double price, int stock)
     {
 
-        this.Id = id;
-        this.Name = name;
-        this.Price = price;
-        this.Stock = stock;
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
 
     }
 
     public int getId()
     {
-        return Id;
+        return id;
     }
 
     public String getName()
     {
-        return Name;
+        return name;
     }
 
     public double getPrice()
     {
-        return Price;
+        return price;
     }
 
     public int getStock()
     {
-        return Stock;
+        return stock;
     }
 
     public boolean reduceStock(int amount) {
@@ -43,17 +43,17 @@ public class Product {
             return false;
         }
 
-        if (amount > Stock) {
+        if (amount > stock) {
             return false;
         }
 
-        Stock -= amount;
+        stock -= amount;
         return true;
     }
 
     public void increaseStock(int amount)
     {
-        Stock += amount;
+        stock += amount;
     }
 
 
