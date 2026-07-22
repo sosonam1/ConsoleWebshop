@@ -9,6 +9,54 @@ public class Main {
     static void main() {
         Scanner scanner = new Scanner(System.in);
 
+        AuthenticationService authenticationService = new AuthenticationService();
+
+        User loggedInUser = null;
+
+        while (loggedInUser == null)
+        {
+            IO.println("\n====== USER AUTHENTICATION ======");
+            IO.println("1. Login");
+            IO.println("2. Register");
+            IO.println("3. Exit");
+            IO.println("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice)
+            {
+                case 1:
+                    IO.println("Username: ");
+                    String loginUsername = scanner.nextLine();
+
+                    IO.println("Password: ");
+                    String loginPassword = scanner.nextLine();
+
+                    loggedInUser = authenticationService.login(loginUsername, loginPassword);
+                    break;
+
+                case 2:
+                    IO.println("Choose a username: ");
+                    String newUsername = scanner.nextLine();
+
+                    IO.println("Choose a password: ");
+                    String newPassword = scanner.nextLine();
+
+                    authenticationService.register(newUsername, newPassword);
+                    break;
+
+                case 3:
+                    IO.println("Closing the application");
+                    scanner.close();
+                    return;
+
+                default:
+                    IO.println("invalid option");
+
+            }
+        }
+
         ArrayList<Product> products = new ArrayList<>();
 
         products.add( new Product(1, "Laptop", 899.99, 10));
@@ -23,6 +71,7 @@ public class Main {
         while (running) {
 
             IO.println("\n===== WEBSHOP =====");
+            IO.println("Logged in as: " + loggedInUser.getUsername());
             IO.println("1. View products");
             IO.println("2. Add product to shopping cart");
             IO.println("3. View shopping cart");
