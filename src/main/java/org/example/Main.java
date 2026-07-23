@@ -34,6 +34,16 @@ public class Main {
                     String loginPassword = scanner.nextLine();
 
                     loggedInUser = authenticationService.login(loginUsername, loginPassword);
+                    if(loggedInUser != null)
+                    {
+                        if(loggedInUser.getRole()== Role.Admin){
+                            IO.println("Welcome Admin!");
+                        }
+                        else{
+                            IO.println("Welcome " + loggedInUser.getUsername() +"!");
+                        }
+                    }
+
                     break;
 
                 case 2:
@@ -64,20 +74,37 @@ public class Main {
         products.add(new Product(3, "Keyboard", 49.99, 20));
         products.add(new Product(4, "WebCam", 19.99, 15));
 
+
         ShoppingCart cart = new ShoppingCart();
+        int nextOrderId = 1001;
 
         boolean running = true;
 
         while (running) {
 
-            IO.println("\n===== WEBSHOP =====");
-            IO.println("Logged in as: " + loggedInUser.getUsername());
-            IO.println("1. View products");
-            IO.println("2. Add product to shopping cart");
-            IO.println("3. View shopping cart");
-            IO.println("4. Remove product from shopping cart");
-            IO.println("5. Checkout");
-            IO.println("6. Exit");
+            if (loggedInUser.getRole() == Role.Customer) {
+                IO.println("\n===== CUSTOMER MENU =====");
+                IO.println("Logged in as: " + loggedInUser.getUsername());
+                IO.println("1. View products");
+                IO.println("2. Add product to shopping cart");
+                IO.println("3. View shopping cart");
+                IO.println("4. Remove product from shopping cart");
+                IO.println("5. Checkout");
+                IO.println("6. View order history");
+                IO.println("7. Exit");
+            }
+            else{
+                IO.println("\n===== ADMIN MENU =====");
+                IO.println("1. View products");
+                IO.println("2. Add product");
+                IO.println("3. Remove product");
+                IO.println("4. Update stock");
+                IO.println("5. Logout");
+
+
+            }
+
+
             IO.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -138,12 +165,29 @@ public class Main {
 
 
                 case 5:
-                    IO.println("Total amount: €" + cart.getTotal());
+                    if(cart.getItems().isEmpty())
+                    {
+                        IO.println("Your shoppinmg cart is empty");
+                        break;
+                    }
+                    cart.showCart();
+                    double total = cart.getTotal();
+                    Order order = new Order(nextOrderId, cart.getItems(), total);
+                    loggedInUser.addOrder(order);
+
+                    IO.println("Order #" + nextOrderId + " has been created.");
+                    IO.println("Total amount: €" + total);
                     IO.println("Thank you for your order!");
-                    running = false;
+
+                    nextOrderId++;
+                    cart.clearCart();
                     break;
 
                 case 6:
+                    loggedInUser.showOrderHistory();
+                    break;
+
+                case 7:
                     IO.println("Closing the webshop.");
                     running = false;
                     break;

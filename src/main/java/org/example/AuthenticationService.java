@@ -6,8 +6,11 @@ public class AuthenticationService {
     private ArrayList<User> users = new ArrayList<>();
 
     public AuthenticationService(){
-        users.add(new User("admin", "admin123"));
-    }
+        users.add(new User("admin", "admin123", Role.Admin));
+        }
+
+
+
 
     public User findUser(String username)
     {
@@ -29,7 +32,7 @@ public class AuthenticationService {
             return false;
         }
 
-        users.add(new User(username, password));
+        users.add(new User(username, password, Role.Customer));
         IO.println("Account created successfully.");
         return true;
     }
@@ -40,7 +43,6 @@ public class AuthenticationService {
 
         if(user != null && user.checkPassword(password))
         {
-            IO.println("Login successful. Welcome " + username +  "!");
             return user;
         }
 

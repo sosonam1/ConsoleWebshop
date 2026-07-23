@@ -27,6 +27,14 @@ public class ShoppingCart {
         IO.println("Total: = € " + getTotal());
     }
 
+    public void clearCart(){
+        items.clear();
+    }
+
+    public ArrayList<CartItem> getItems(){
+        return new ArrayList<>(items);
+    }
+
     public double getTotal(){
         double total = 0;
         for (CartItem item : items){total += item.getSubtotal();}
