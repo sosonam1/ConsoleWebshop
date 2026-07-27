@@ -229,7 +229,7 @@ public class Main {
                     case 5:
                         if(cart.getItems().isEmpty())
                         {
-                            IO.println("Your shoppinmg cart is empty");
+                            IO.println("Your shopping cart is empty");
                             break;
                         }
                         cart.showCart();
