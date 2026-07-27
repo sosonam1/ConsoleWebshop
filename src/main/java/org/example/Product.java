@@ -37,13 +37,19 @@ public class Product {
         return stock;
     }
 
+    public void setStock(int stock){
+        this.stock = stock;
+    }
+
     public boolean reduceStock(int amount) {
 
         if (amount <= 0) {
+            IO.println("Quantity must be greater than zero");
             return false;
         }
 
         if (amount > stock) {
+            IO.println("Not enough stock");
             return false;
         }
 
@@ -53,7 +59,9 @@ public class Product {
 
     public void increaseStock(int amount)
     {
-        stock += amount;
+        if(amount > 0){
+            stock += amount;
+        }
     }
 
 

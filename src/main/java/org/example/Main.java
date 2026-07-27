@@ -11,6 +11,8 @@ public class Main {
 
         AuthenticationService authenticationService = new AuthenticationService();
 
+        ProductService productService = new ProductService();
+
         User loggedInUser = null;
 
         while (loggedInUser == null)
@@ -76,13 +78,23 @@ public class Main {
 
 
         ShoppingCart cart = new ShoppingCart();
+        int nextProductId = 5;
         int nextOrderId = 1001;
 
         boolean running = true;
 
         while (running) {
 
-            if (loggedInUser.getRole() == Role.Customer) {
+            if(loggedInUser.getRole() == Role.Admin){
+                IO.println("\n===== ADMIN MENU =====");
+                IO.println("Logged in as: " + loggedInUser.getUsername());
+                IO.println("1. View products");
+                IO.println("2. Add product");
+                IO.println("3. Remove product");
+                IO.println("4. Update stock");
+                IO.println("5. Logout");
+            }
+            else{
                 IO.println("\n===== CUSTOMER MENU =====");
                 IO.println("Logged in as: " + loggedInUser.getUsername());
                 IO.println("1. View products");
@@ -92,110 +104,162 @@ public class Main {
                 IO.println("5. Checkout");
                 IO.println("6. View order history");
                 IO.println("7. Exit");
-            }
-            else{
-                IO.println("\n===== ADMIN MENU =====");
-                IO.println("1. View products");
-                IO.println("2. Add product");
-                IO.println("3. Remove product");
-                IO.println("4. Update stock");
-                IO.println("5. Logout");
-
 
             }
-
 
             IO.print("Choose an option: ");
 
             int choice = scanner.nextInt();
 
-            switch (choice) {
+            //admin switch
 
-                case 1:
-                    IO.println("\nProducts:");
+            if(loggedInUser.getRole() == Role.Admin){
 
-                    for (Product product : products) {
-                        IO.println(
-                                product.getId() + ". "
-                                        + product.getName()
-                                        + " - €" + product.getPrice()
-                                        + " (Stock: " + product.getStock() + ")"
-                        );
-                    }
+                switch (choice){
+                    case 1:
+                        productService.showProducts(products);
+                        break;
 
-                    break;
+                    case 2:
+                        IO.println("Enter product name: ");
+                        String productName = scanner.nextLine();
 
-                case 2:
-                    IO.print("Enter the product number: ");
-                    int id = scanner.nextInt();
+                        IO.println("Enter product price: ");
+                        double productPrice = scanner.nextDouble();
 
-                    IO.print("Enter the quantity: ");
-                    int quantity = scanner.nextInt();
+                        IO.println("Enter product stock: ");
+                        int productStock = scanner.nextInt();
+                        scanner.nextLine();
 
-                    Product foundProduct = null;
+                        Product newProduct = new Product(nextProductId, productName,
+                                productPrice, productStock);
 
-                    for (Product product : products) {
-                        if (product.getId() == id) {
-                            foundProduct = product;
+                        productService.addProduct(products, newProduct);
+
+                        nextProductId++;
+                        break;
+
+                    case 3:
+                        productService.showProducts(products);
+
+                        IO.println("Enter product ID to remove: ");
+                        int removeProductId = scanner.nextInt();
+                        scanner.nextLine();
+
+                        productService.removeProduct(products, removeProductId);
+                        break;
+
+                    case 4:
+                        productService.showProducts(products);
+
+                        IO.println("Enter product Id: ");
+                        int updateProductId = scanner.nextInt();
+                        scanner.nextLine();
+
+
+                        IO.println("Enter new stock amount: ");
+                        int newStock= scanner.nextInt();
+                        scanner.nextLine();
+
+                        productService.updateStock(products, updateProductId, newStock);
+                        break;
+
+                    case 5:
+                        IO.println("Admin logged out.");
+                        running = false;
+                        break;
+
+                    default:
+                        IO.println("Invalid option");
+
+
+
+                }
+
+
+
+            } else {
+
+                switch (choice) {
+
+                    case 1:
+                        IO.println("\nProducts:");
+                        productService.showProducts(products);
+                        break;
+
+                    case 2:
+                        IO.print("Enter the product number: ");
+                        int id = scanner.nextInt();
+
+                        IO.print("Enter the quantity: ");
+                        int quantity = scanner.nextInt();
+
+                        Product foundProduct = null;
+
+                        for (Product product : products) {
+                            if (product.getId() == id) {
+                                foundProduct = product;
+                                break;
+                            }
+                        }
+
+                        if (foundProduct != null) {
+                            if(foundProduct.reduceStock(quantity))
+                                cart.addProduct(foundProduct, quantity);
+                            IO.println("Product added to the shopping cart!");
+                            IO.println("Remaining stock: " + foundProduct.getStock());
+                        } else {
+                            IO.println("Product not found.");
+                        }
+
+                        break;
+
+                    case 3:
+                        cart.showCart();
+                        break;
+
+                    case 4:
+                        cart.showCart();
+                        IO.println("Enter product ID to remove: ");
+                        int RemoveId = scanner.nextInt();
+                        cart.removeCartItem(RemoveId);
+                        break;
+
+
+                    case 5:
+                        if(cart.getItems().isEmpty())
+                        {
+                            IO.println("Your shoppinmg cart is empty");
                             break;
                         }
-                    }
+                        cart.showCart();
+                        double total = cart.getTotal();
+                        Order order = new Order(nextOrderId, cart.getItems(), total);
+                        loggedInUser.addOrder(order);
 
-                    if (foundProduct != null) {
-                        if(foundProduct.reduceStock(quantity))
-                            cart.addProduct(foundProduct, quantity);
-                        IO.println("Product added to the shopping cart!");
-                        IO.println("Remaining stock: " + foundProduct.getStock());
-                    } else {
-                        IO.println("Product not found.");
-                    }
+                        IO.println("Order #" + nextOrderId + " has been created.");
+                        IO.println("Total amount: €" + total);
+                        IO.println("Thank you for your order!");
 
-                    break;
-
-                case 3:
-                    cart.showCart();
-                    break;
-
-                case 4:
-                    cart.showCart();
-                    IO.println("Enter product ID to remove: ");
-                    int RemoveId = scanner.nextInt();
-                    cart.removeCartItem(RemoveId);
-                    break;
-
-
-                case 5:
-                    if(cart.getItems().isEmpty())
-                    {
-                        IO.println("Your shoppinmg cart is empty");
+                        nextOrderId++;
+                        cart.clearCart();
                         break;
-                    }
-                    cart.showCart();
-                    double total = cart.getTotal();
-                    Order order = new Order(nextOrderId, cart.getItems(), total);
-                    loggedInUser.addOrder(order);
 
-                    IO.println("Order #" + nextOrderId + " has been created.");
-                    IO.println("Total amount: €" + total);
-                    IO.println("Thank you for your order!");
+                    case 6:
+                        loggedInUser.showOrderHistory();
+                        break;
 
-                    nextOrderId++;
-                    cart.clearCart();
-                    break;
+                    case 7:
+                        IO.println("Closing the webshop.");
+                        running = false;
+                        break;
 
-                case 6:
-                    loggedInUser.showOrderHistory();
-                    break;
-
-                case 7:
-                    IO.println("Closing the webshop.");
-                    running = false;
-                    break;
-
-                default:
-                    IO.println("Invalid option. Please try again.");
+                    default:
+                        IO.println("Invalid option. Please try again.");
+                }
             }
         }
+
 
     }
 }
